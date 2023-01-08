@@ -2,7 +2,7 @@
 
 ---
 
-webhookSpammer allows you to easily nuke a webhook used by script kiddies or malware developers. Heres how to use it:
+webhookSpammer allows you to easily nuke webhooks used by script kiddies or malware developers. Heres how to use it:
 
 ---
 
