@@ -2,9 +2,8 @@ import requests
 import random
 import json
 import time
-
+import os
 fileURL = "https://verumignis.com/spam.json"
-
 while True:
     try:
         url = input("Enter the webhook URL: ")
@@ -21,7 +20,6 @@ while True:
             print("Invalid webhook")
     except:
         print("Invalid webhook")
-
 print(f"Downloading spam message file from {fileURL}")
 try:
     response = requests.get(fileURL)
@@ -29,25 +27,22 @@ try:
     print("Downloaded successfully")
 except:
     print("Could not get message file")
+    raise BaseException(f"Unable to GET {fileURL}")
 
 print("Spam starting...")
-
-previous_message = None
+previousMessage = None
 x = 0
-
 while True:
-    message = previous_message
-    while message == previous_message:
+    message = previousMessage
+    while message == previousMessage:
         message = random.choice(messages)
-    previous_message = message
-
+    previousMessage = message
     image = message['image']
     username = message['username']
     avatar = message['avatar']
     title = message['title']
     text = message['text']
-
-    payload = {
+    outJSON = {
         "content": "@everyone",
         "embeds": [{
             "title": title,
@@ -62,14 +57,10 @@ while True:
         "username": username,
         "avatar_url": avatar
     }
-
-    # Send the POST request to the webhook
-    response = requests.post(url, json=payload, headers={"Content-Type": "application/json"})
+    response = requests.post(url, json=outJSON, headers={"Content-Type": "application/json"})
     if response.status_code == 204:
         x = x+1
         print(f"Spammed successfully {x} time(s)")
     else:
         print("Failed to spam webhook, maybe it got deleted?")
-
-    # Sleep for 1 second to avoid hitting Discord's rate limits
     time.sleep(5)
